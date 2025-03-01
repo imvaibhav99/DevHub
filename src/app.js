@@ -14,8 +14,16 @@ app.get("/user",(req,res)=>{
 })
  
 //post handles POST api calls
-app.post("/user",(req,res)=>{
-    res.send("test get call");
+// app.post("/user",(req,res)=>{
+//     // res.send("test get call");
+   
+// })
+app.post("/user",(req,res,next)=>{
+    //  res.send("test get call");
+    next();
+   // res.send("test get call");
+},(req,res)=>{
+    res.send("second response");
 })
 
 //ues handles all api calls
