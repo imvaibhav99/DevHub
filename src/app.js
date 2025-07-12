@@ -1,21 +1,55 @@
-//creating a new server using express->npm i express
 const express= require("express");
 const connectDB=require("./config/database.js")  //exported the database.js
 const app=express();
 const User=require("./models/user");  //get the user model 
+const { validateSignUpData } = require("./utils/validation.js");
+const bcrypt=require('bcrypt');
 
 app.use(express.json());//middleware which reads the json data
 
 //creating api directly from app.js using postman
-app.post("/signup", async (req,res)=>{
-    //create the new instance of the User model
-const user = new User(req.body);
-    try{
-        await user.save();  //user will be saved to the database and the promise will be returned so we will use async await
-        res.send("User added successfully")
-    } catch(err){
-        res.status(400).send("Error saving the user" + err.message);
-    }
+app.post("/signup", async (req, res) => {
+  try {
+     //now when made any req of json data->it will go through api validator
+    validateSignUpData(req); //API level validation =>written inside try block so that it can be catched from catch block
+
+    const { firstName , lastName , emailId, password }=req.body;  //after validation,instantly extract the data,dont trust req.body
+ 
+    const passwordHash = await bcrypt.hash(password,10);
+    console.log(passwordHash);
+    
+
+    const user = new User({
+        firstName,
+        lastName,
+        emailId,
+        password: passwordHash
+    });  //->if passes then a new instance of user will be created in DB
+    await user.save();                //user will be saved to the database and the promise will be returned so we will use async await
+    res.send("User added successfully");
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+});
+
+
+app.post("/login", async (req,res)=>{
+ try{
+        const { emailId, password} = req.body;
+        const user= await User.findOne({emailId : emailId})
+        if(!user){
+            throw new Error("User not found in Database");
+        }
+
+        const isPasswordValid = await bcrypt.compare(password , user.password);
+        if(isPasswordValid){
+            res.send("Login Successfull")
+        }else{
+            throw new Error("Password is not correct ")
+        }
+    } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
 });
 
 //to find the user data by using emailId by using get

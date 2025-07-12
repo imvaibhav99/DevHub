@@ -174,3 +174,58 @@ PATCH->user info updated
         res.status(400).send("UPDATE FAILED"+ err.message); 
     }
 }) -->
+->NOW to add DB level validation on emailId:
+    npm i validator
+  in user.js add validator:
+  <!-- const validator=require('validator') -->
+<!-- 
+   emailId:{
+        type: String,
+        required:true,
+        unique:true,
+        lowercase:true, //always lowercase emailId
+        trim:true , //to remove the whitespaces from front and back which can be considered as new emailId
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("email invalid "+ value);
+            }
+        }
+    } -->
+
+    Similarly validate isStrongPassword(value) in password
+    ->After DB validation,we should also validate apis.It become more safer ...
+       create a folder:src->utils->validation.js (Write all the required api validations here)
+
+       in validation.js:add the validateSignUp function,then update app.js:
+       <!-- app.post("/signup", async (req,res)=>{
+           //now when made any req of json data->it will go through api validator
+    try{
+        validateSignUpData(req); 
+        const user= new User(req.body);  //->if passes then a new instance of user will be created in DB
+        await user.save();       //user will be saved to the database and the promise will be returned so we will use async await
+        res.send("User added successfully")
+    } catch(err){
+        res.status(400).send("ERROR: " + err.message);
+    }
+}); -->
+
+->Encrypting password: npm i bcrypt 
+  const bcrypt=require('bcrypt'); in app.js,
+ THis is the best way to write the signuo api,with not depending completely on the req.body,
+  <!-- app.post("/signup", async (req, res) => {
+  try {
+    validateSignUpData(req);
+    const { firstName , lastName , emailId, password }=req.body;  //after validation,instantly extract the data,dont trust req.body
+    const passwordHash = await bcrypt.hash(password,10);  encrypting the password by 10 rounds
+    const user = new User({
+        firstName,
+        lastName,
+        emailId,
+        password: passwordHash ->sesnding the encrypted password hash to the database
+    });  //->if passes then a new instance of user will be created in DB,with storing the necessary inputs directly
+    await user.save();              
+    res.send("User added successfully");
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+}); -->

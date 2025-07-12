@@ -1,5 +1,6 @@
 //creating a Schema 
 const mongoose = require('mongoose');
+const validator=require('validator')
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -15,11 +16,22 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true,
         lowercase:true, //always lowercase emailId
-        trim:true  //to remove the whitespaces from front and back which can be considered as new emailId
+        trim:true , //to remove the whitespaces from front and back which can be considered as new emailId
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error(" email invalid "+ value);
+            }
+        }
     },
     password:{
         type: String,
         required:true,
+        unique:true, 
+         validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error( " enter a strong password "+ value);
+            }
+        }
     },
     age:{
         type: Number,
@@ -35,7 +47,12 @@ const userSchema = new mongoose.Schema({
     },
     photourl:{
         type:String,
-        default:"https://media.istockphoto.com/id/1726213993/vector/default-avatar-profile-placeholder-abstract-vector-silhouette-element.jpg?s=612x612&w=0&k=20&c=nYlk0j076CBZ5xGCCaVXtISYGK2SzXRwuQBXPkfmMX4="
+        default:"https://media.istockphoto.com/id/1726213993/vector/default-avatar-profile-placeholder-abstract-vector-silhouette-element.jpg?s=612x612&w=0&k=20&c=nYlk0j076CBZ5xGCCaVXtISYGK2SzXRwuQBXPkfmMX4=",
+         validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("invalid photo URL"+ value);
+            }
+        }
     },about:{
         type:String,
         default:"This is default about of a User" //to store default behaviour in DB 
