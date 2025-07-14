@@ -4,18 +4,21 @@ const app=express();
 const User=require("./models/user");  //get the user model 
 const { validateSignUpData } = require("./utils/validation.js");
 const bcrypt=require('bcrypt');
-
+const cookieParser=require("cookie-parser");
+const jwt=require("jsonwebtoken"); 
+const { userAuth } = require("./middlewares/auth"); 
 app.use(express.json());//middleware which reads the json data
+app.use(cookieParser()); //middleware
 
 //creating api directly from app.js using postman
 app.post("/signup", async (req, res) => {
   try {
      //now when made any req of json data->it will go through api validator
-    validateSignUpData(req); //API level validation =>written inside try block so that it can be catched from catch block
+    validateSignUpData(req); //API level validation =>written inside try block so that its error can be catched from catch block
 
     const { firstName , lastName , emailId, password }=req.body;  //after validation,instantly extract the data,dont trust req.body
  
-    const passwordHash = await bcrypt.hash(password,10);
+    const passwordHash = await bcrypt.hash(password,10);  //bcrypt for password hashing, password 10times encrypting
     console.log(passwordHash);
     
 
@@ -24,7 +27,7 @@ app.post("/signup", async (req, res) => {
         lastName,
         emailId,
         password: passwordHash
-    });  //->if passes then a new instance of user will be created in DB
+    });  //->if passes the validation then only creating a new instance of user in DB,storing the password as encrypted thread
     await user.save();                //user will be saved to the database and the promise will be returned so we will use async await
     res.send("User added successfully");
   } catch (err) {
@@ -35,15 +38,20 @@ app.post("/signup", async (req, res) => {
 
 app.post("/login", async (req,res)=>{
  try{
-        const { emailId, password} = req.body;
-        const user= await User.findOne({emailId : emailId})
+        const { emailId, password} = req.body;  //extract the necessary from the req.body
+        const user= await User.findOne({emailId : emailId})  //find the emailId entered in the database
         if(!user){
             throw new Error("User not found in Database");
         }
-
-        const isPasswordValid = await bcrypt.compare(password , user.password);
+        const isPasswordValid = await bcrypt.compare(password , user.password);  //convert the entered password to encrypted one nd match it in database
         if(isPasswordValid){
-            res.send("Login Successfull")
+
+            const token=await jwt.sign({_id:user._id},"DEVHUB@99"); //hiding the user id into the cookies along with the secret code
+            console.log(token);
+            //add the token back to the server and send the cookie back to user
+            res.cookie("token",token)
+            res.send("Login Successfull");
+         
         }else{
             throw new Error("Password is not correct ")
         }
@@ -51,6 +59,16 @@ app.post("/login", async (req,res)=>{
     res.status(400).send("ERROR: " + err.message);
   }
 });
+
+app.get("/profile",userAuth, async (req, res) => {
+  try {
+    const user=req.user 
+    res.send(user); // Send full user data (excluding password by default)
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message); 
+  }
+});
+
 
 //to find the user data by using emailId by using get
 app.get("/user",async (req,res)=>{
@@ -76,14 +94,14 @@ app.delete("/user",async(req,res)=>{
     const userId= req.body.userId;
     try{
         const user=await User.findByIdAndDelete(userId);
-        res.send("User deleteed successfully");
+        res.send("User deleted successfully");
     }catch(err){
         res.status(400).send("Something went wrong");
     }
 });
 
 //Updating data of a user->PATCH api
-app.patch("/user/:userId",async(req,res)=>{
+app.patch("/user/:userId",async(req,res)=>{  //passing the dynamic URL
     const userId=req.params?.userId;
     const data=req.body;
     try{

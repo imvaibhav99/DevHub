@@ -1,6 +1,6 @@
 //creating a Schema 
 const mongoose = require('mongoose');
-const validator=require('validator')
+const validator=require('validator')  //in built libarary used for DB validations
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,

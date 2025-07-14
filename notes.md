@@ -229,3 +229,79 @@ PATCH->user info updated
     res.status(400).send("ERROR: " + err.message);
   }
 }); -->
+
+->create the login api,to send email nd password to server:
+<!-- app.post("/login", async (req,res)=>{
+ try{
+        const { emailId, password} = req.body;  //extract the necessary from the req.body
+        const user= await User.findOne({emailId : emailId})  //find the emailId entered in the database
+        if(!user){
+            throw new Error("User not found in Database");
+        }
+        const isPasswordValid = await bcrypt.compare(password , user.password);  //convert the entered password to encrypted one nd match it in database
+        if(isPasswordValid){
+
+            res.cookie("token","jnjdnckjdnjcknwjkdnwcn")
+            res.send("Login Successfull")
+        }else{
+            throw new Error("Password is not correct ")
+        }
+    } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+}); -->
+
+-->Cookies and jwt Authentication:
+ npm i cookie-parser:cookie-parser is a middleware that helps you read cookies sent by the client (usually the browser) in requests.After the login req is made nd cookie is sent back to the user,then while calling the other apis,cookie is passed along with api from the user,cookie-parser is used to read it.
+ in app.js:
+    const cookieParser=require("cookie-parser");
+    app.use(cookieParser()); //middleware
+
+ npm i jsonwebtoken->for jwt token creation
+ const jwt=require("jsonwebtoken");  
+ ->Final LOGIN API:
+ <!-- app.post("/login", async (req,res)=>{
+ try{
+        const { emailId, password} = req.body;  //extract the necessary from the req.body
+        const user= await User.findOne({emailId : emailId})  //find the emailId entered in the database
+        if(!user){
+            throw new Error("User not found in Database");
+        }
+        const isPasswordValid = await bcrypt.compare(password , user.password);  //convert the entered password to encrypted one nd match it in database
+        if(isPasswordValid){
+
+            const token=await jwt.sign({_id:user._id},"DEVHUB@99"); //hiding the user id into the cookies along with the secret code
+            console.log(token);
+            //add the token back to the server and send the cookie back to user
+            res.cookie("token",token)
+            res.send("Login Successfull");
+         
+        }else{
+            throw new Error("Password is not correct ")
+        }
+    } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+}); -->
+
+The Profile api created to view the profile of logged in user:
+<!-- app.get("/profile", async (req, res) => {
+  try {
+    const cookies = req.cookies; // Ask the user to send their cookies (contains token)
+    const { token } = cookies;   // Extract the JWT token from cookies
+
+    // Validate the token
+    const decodedMessage = await jwt.verify(token, "DEVHUB@99"); 
+    const { _id } = decodedMessage; // 🎯 Extract user ID from decoded token
+    console.log("Logged in user is: " + _id); // Debug log
+    // 🧾 Fetch user details from database
+    const user = await User.findById(_id);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    res.send(user); // Send full user data (excluding password by default)
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message); 
+  }
+}); -->
+the verify and sign functions are used,refer the documentation
