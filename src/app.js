@@ -45,9 +45,7 @@ app.post("/login", async (req,res)=>{
         }
         const isPasswordValid = await bcrypt.compare(password , user.password);  //convert the entered password to encrypted one nd match it in database
         if(isPasswordValid){
-
-            const token=await jwt.sign({_id:user._id},"DEVHUB@99"); //hiding the user id into the cookies along with the secret code
-            console.log(token);
+            const token=await user.getJwt();            
             //add the token back to the server and send the cookie back to user
             res.cookie("token",token)
             res.send("Login Successfull");

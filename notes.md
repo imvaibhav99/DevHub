@@ -211,7 +211,7 @@ PATCH->user info updated
 
 ->Encrypting password: npm i bcrypt 
   const bcrypt=require('bcrypt'); in app.js,
- THis is the best way to write the signuo api,with not depending completely on the req.body,
+ THis is the best way to write the signup api,with not depending completely on the req.body,
   <!-- app.post("/signup", async (req, res) => {
   try {
     validateSignUpData(req);

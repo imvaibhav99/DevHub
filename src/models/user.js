@@ -63,6 +63,14 @@ const userSchema = new mongoose.Schema({
     
 },{timestamps:true});
 
+userSchema.methods.getJwt= async function (){
+    const user = this;
+    const token= await jwt.sign({_id:user._id},"DEVHUB@99",{
+        expiresIn:"7d",
+    });
+    return token;
+}
+
 //create a model of User named userModel which will export the userSchema for a User which will have these properties
 const userModel = mongoose.model("User", userSchema);//(name,schema name)
 module.exports = userModel;
