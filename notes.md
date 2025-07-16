@@ -305,3 +305,9 @@ The Profile api created to view the profile of logged in user:
   }
 }); -->
 the verify and sign functions are used,refer the documentation
+
+Since there are too many apis,it is not a good way to write all of them in single app.js file.So similar apis will be grouped togetherand written in same file.We will create express routers and use them in place of app.use.
+->create src->routes->auth.js
+
+
+

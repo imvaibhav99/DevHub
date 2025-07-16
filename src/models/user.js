@@ -1,6 +1,8 @@
 //creating a Schema 
 const mongoose = require('mongoose');
 const validator=require('validator')  //in built libarary used for DB validations
+const jwt = require('jsonwebtoken');
+
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,

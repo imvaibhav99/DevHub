@@ -1,7 +1,7 @@
 const validator = require("validator"); 
 
 const validateSignUpData = (req) => {
-  console.log("🔍 Running API-level validation..."); 
+  //console.log("🔍 Running API-level validation..."); 
   const { firstName, lastName, emailId, password } = req.body; //extract importants from body
 
   if (!firstName || !lastName) {
