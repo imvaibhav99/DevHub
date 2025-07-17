@@ -65,13 +65,19 @@ const userSchema = new mongoose.Schema({
     
 },{timestamps:true});
 
-userSchema.methods.getJwt= async function (){
-    const user = this;
-    const token= await jwt.sign({_id:user._id},"DEVHUB@99",{
+
+
+//the getJwt method will be called in the login route to get the jwt token for the user
+userSchema.methods.getJwt= async function (){    //instance method to get the jwt token for a user
+
+    //this is the instance method which will be used to get the jwt token for a user
+    const user = this;                            //this refers to the user instance
+    const token= await jwt.sign({_id:user._id},"DEVHUB@99",{    //signing the token with the secret key
         expiresIn:"7d",
     });
-    return token;
+    return token;                                  
 }
+
 
 //create a model of User named userModel which will export the userSchema for a User which will have these properties
 const userModel = mongoose.model("User", userSchema);//(name,schema name)

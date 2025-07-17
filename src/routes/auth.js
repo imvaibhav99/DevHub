@@ -22,10 +22,8 @@ authRouter.post("/signup", async (req, res) => {
 
     const { firstName , lastName , emailId, password }=req.body;  //after validation,instantly extract the data,dont trust req.body
  
-    const passwordHash = await bcrypt.hash(password,10);  //bcrypt for password hashing, password 10times encrypting
+    const passwordHash = await bcrypt.hash(password,10);  //bcrypt for password hashing, password 10 times encrypting
     console.log(passwordHash);
-    
-
     const user = new User({
         firstName,
         lastName,
@@ -49,17 +47,24 @@ authRouter.post("/login", async (req,res)=>{
         }
         const isPasswordValid = await bcrypt.compare(password , user.password);  //convert the entered password to encrypted one nd match it in database
         if(isPasswordValid){
-            const token=await user.getJwt();            
+            const token=await user.getJwt();             //get the jwt token from the user model
             //add the token back to the server and send the cookie back to user
-            res.cookie("token",token)
-            res.send("Login Successfull");
-         
+            res.cookie("token",token)     //set the cookie with the token
+            res.send("Login Successfull"); 
+          
         }else{
             throw new Error("Password is not correct ")
         }
     } catch (err) {
     res.status(400).send("ERROR: " + err.message);
   }
+});
+
+authRouter.post("/logout", async (req,res)=>{
+    res.cookie("token",null,{
+        expires: new Date(Date.now())
+    })
+    res.send("Logout Successfull")
 });
 
 module.exports=authRouter;

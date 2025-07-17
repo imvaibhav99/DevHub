@@ -1,7 +1,8 @@
+//API level validation
 const validator = require("validator"); 
 
+//function to validate data for user signup
 const validateSignUpData = (req) => {
-  //console.log("🔍 Running API-level validation..."); 
   const { firstName, lastName, emailId, password } = req.body; //extract importants from body
 
   if (!firstName || !lastName) {
@@ -13,4 +14,14 @@ const validateSignUpData = (req) => {
   }
 };
 
-module.exports = { validateSignUpData };
+// Function to validate data for editing profile
+const validateEditProfileData = (req) => {
+  const allowedEditFields=["firstName","lastName","photoUrl","about","gender","age","skills"];
+  const isEditAllowed=Object.keys(req.body).every((k)=>{
+    return allowedEditFields.includes(k);
+  })
+    return isEditAllowed;
+}
+
+
+module.exports = { validateSignUpData ,validateEditProfileData};

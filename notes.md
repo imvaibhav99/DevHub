@@ -307,7 +307,48 @@ The Profile api created to view the profile of logged in user:
 the verify and sign functions are used,refer the documentation
 
 Since there are too many apis,it is not a good way to write all of them in single app.js file.So similar apis will be grouped togetherand written in same file.We will create express routers and use them in place of app.use.
-->create src->routes->auth.js
+->create src->routes->auth.js,profile.js,request.js.
+move all the apis grouped together in that file.
+ <!-- const authRouter=express.Router(); //call express Router -->
+put all essential imports in each api file.
 
+->create a logout api in auth.js:
+<!-- authRouter.post("/logout", async (req,res)=>{
+    res.cookie("token",null,{  //set token to null 
+        expires: new Date(Date.now()) //expire the cookie now
+    })
+    res.send("Logout Successfull")
+}) -->
 
+->Create the profile apis:
+ ("/profile/view") && ("profile/edit") apis.
+ <!-- profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
+  try{
+ if(!validateEditProfileData(req)){     // Validate the data before processing
+    throw new Error("Invalid data for edit");
+ }
+ const loggedInUser=req.user;       
+ //console.log(loggedInUser);
+              //get the logged in user from the middleware
+ Object.keys(req.body).forEach((key) => {        //req.body contains the fields of database that we want to update
+      loggedInUser[key] = req.body[key];          // Update the user object with the new data     
+    });
+ //console.log(loggedInUser);
+  await loggedInUser.save();             // Save the updated user object to the database
+  res.json({
+    message:`${loggedInUser.firstName}, your profile was updated successfully!!`,
+    data: loggedInUser
+  });
 
+}catch(err){
+    res.status(400).send("ERROR: " + err.message);
+  }}); -->
+
+  in validation.js:
+  <!-- const validateEditProfileData = (req) => {
+  const allowedEditFields=["firstName","lastName","photoUrl","about","gender","age","skills"];
+  const isEditAllowed=Object.keys(req.body).every((k)=>{
+    return allowedEditFields.includes(k);
+  })
+    return isEditAllowed;
+} -->
