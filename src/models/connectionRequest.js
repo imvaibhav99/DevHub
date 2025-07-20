@@ -18,6 +18,8 @@ const connectionRequestSchema=new mongoose.Schema({
     }
 },{timestamps:true});
 
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 })// Ensures that a connection request between two users is unique
+
 //prevents the fromUserId to send connection request to himself
 //this is a pre-save hook which runs before saving the connection request to the database
 connectionRequestSchema.pre("save",function(next){

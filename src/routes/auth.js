@@ -23,7 +23,7 @@ authRouter.post("/signup", async (req, res) => {
     const { firstName , lastName , emailId, password }=req.body;  //after validation,instantly extract the data,dont trust req.body
  
     const passwordHash = await bcrypt.hash(password,10);  //bcrypt for password hashing, password 10 times encrypting
-    console.log(passwordHash);
+    //console.log(passwordHash);
     const user = new User({
         firstName,
         lastName,

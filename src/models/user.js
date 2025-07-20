@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required:true,
+        index:true, //to make the firstName searchable in DB
         minLength:4,   //min lenngth of name should be 4
         maxLength:50,
     },

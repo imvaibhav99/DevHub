@@ -1,6 +1,6 @@
 const express= require("express");
-const connectDB=require("./config/database.js")  //exported the database.js
-const app=express();
+const connectDB=require("./config/database.js")  //imported the database.js
+const app=express(); 
 const User=require("./models/user");  //get the user model 
 const { validateSignUpData } = require("./utils/validation.js");
 const bcrypt=require('bcrypt');
@@ -10,7 +10,7 @@ const { userAuth } = require("./middlewares/auth");
 
 
 app.use(express.json());//middleware which reads the json data
-app.use(cookieParser()); //middleware
+app.use(cookieParser()); //middleware to parse cookies from the request
 
 
 const authRouter=require("./routes/auth.js"); //importing the auth router
@@ -18,7 +18,7 @@ const profileRouter=require("./routes/profile.js"); //importing the profile rout
 const requestRouter=require("./routes/request.js"); //importing the request router
 
 app.use("/",authRouter); //using the auth router
-app.use("/",profileRouter); //using the profile router
+app.use("/",profileRouter); //using the profile router                                       
 app.use("/",requestRouter); //using the request router
 
 //deleting a user by userId:passing userId in postman api,then deletes from DB

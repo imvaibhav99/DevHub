@@ -15,7 +15,7 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
     if(!allowedStatus.includes(status)){
         return res.status(400).json("Invalid status: "+ status);
     }
-
+// Check if the toUserId is valid
     const toUser= await User.findById(toUserId);
     if(!toUser){
         return res.status(404).json( {message: "User not found"});
@@ -27,7 +27,6 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
     { fromUserId: toUserId, toUserId: fromUserId }
   ]
 });
-
     if(existingConnectionRequest){
         return res.status(400).send("Connection request already exists");
     }
