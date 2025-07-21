@@ -9,6 +9,7 @@ const jwt=require("jsonwebtoken");
 const { userAuth } = require("./middlewares/auth"); 
 
 
+
 app.use(express.json());//middleware which reads the json data
 app.use(cookieParser()); //middleware to parse cookies from the request
 
@@ -16,10 +17,13 @@ app.use(cookieParser()); //middleware to parse cookies from the request
 const authRouter=require("./routes/auth.js"); //importing the auth router
 const profileRouter=require("./routes/profile.js"); //importing the profile router
 const requestRouter=require("./routes/request.js"); //importing the request router
+const userRouter=require("./routes/user"); //importing the user router
+
 
 app.use("/",authRouter); //using the auth router
 app.use("/",profileRouter); //using the profile router                                       
 app.use("/",requestRouter); //using the request router
+app.use("/",userRouter); //using the user router
 
 //deleting a user by userId:passing userId in postman api,then deletes from DB
 app.delete("/user",async(req,res)=>{

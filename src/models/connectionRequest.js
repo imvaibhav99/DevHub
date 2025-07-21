@@ -1,8 +1,10 @@
 const mongoose=require("mongoose");
+const User = require("./user.js"); //importing the user model
 const connectionRequestSchema=new mongoose.Schema({
     fromUserId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
+        ref:"User" // Reference to the User model
     },
     toUserId:{
         type:mongoose.Schema.Types.ObjectId,
