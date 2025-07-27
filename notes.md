@@ -399,3 +399,20 @@ put all essential imports in each api file.
     }
 }) -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+->npm i cors ->in app.js app.use(cors()); middleware
+<!-- app.use(cors({
+    origin:"http://localhost:5174",  //frontend URL 
+    credentials:true, //allow cookies to be sent with requests
+})); -->

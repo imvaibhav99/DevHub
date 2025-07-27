@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const validator=require('validator')  //in built libarary used for DB validations
 const jwt = require('jsonwebtoken');
 
+//creating a schema i.e. blueprint of a user
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -55,7 +56,7 @@ const userSchema = new mongoose.Schema({
             if(!validator.isURL(value)){
                 throw new Error("invalid photo URL"+ value);
             }
-        }
+        } 
     },about:{
         type:String,
         default:"This is default about of a User" //to store default behaviour in DB 

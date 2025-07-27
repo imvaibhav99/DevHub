@@ -7,9 +7,12 @@ const bcrypt=require('bcrypt');
 const cookieParser=require("cookie-parser");
 const jwt=require("jsonwebtoken"); 
 const { userAuth } = require("./middlewares/auth"); 
- 
+ const cors= require("cors"); //importing cors to allow cross-origin requests
 
-
+app.use(cors({
+    origin:"http://localhost:5173",  //frontend URL
+    credentials:true, //allow cookies to be sent with requests
+}));
 app.use(express.json());//middleware which reads the json data
 app.use(cookieParser()); //middleware to parse cookies from the request
 
@@ -24,17 +27,6 @@ app.use("/",authRouter); //using the auth router
 app.use("/",profileRouter); //using the profile router                                       
 app.use("/",requestRouter); //using the request router
 app.use("/",userRouter); //using the user router
-
-//deleting a user by userId:passing userId in postman api,then deletes from DB
-app.delete("/user",async(req,res)=>{
-    const userId= req.body.userId;
-    try{
-        const user=await User.findByIdAndDelete(userId);
-        res.send("User deleted successfully");
-    }catch(err){
-        res.status(400).send("Something went wrong");
-    }
-});
 
 //Updating data of a user->PATCH api
 app.patch("/user/:userId",async(req,res)=>{  //passing the dynamic URL

@@ -5,7 +5,7 @@
     try{
         const {token}=req.cookies;  //asking token from the cookies
         if(!token){
-            throw new Error("Invalid token!!")  //if token is not present in the cookies
+           return res.status(401).send("Please Login")  //if token is not present in the cookies
         }
         const decodeObj=  await jwt.verify(token ,"DEVHUB@99") //verify the token with the secret key
         const {_id}= decodeObj;                               //extract the userId from the decoded object
