@@ -20,7 +20,18 @@ authRouter.post("/signup", async (req, res) => {
      //now when made any req of json data->it will go through api validator
     validateSignUpData(req); //API level validation =>written inside try block so that its error can be catched from catch block
 
-    const { firstName , lastName , emailId, password }=req.body;  //after validation,instantly extract the data,dont trust req.body
+        const {
+      firstName,
+      lastName,
+      emailId,
+      password,
+      age,
+      gender,
+      skills,
+      about,
+      photoUrl,
+    } = req.body;
+  //after validation,instantly extract the data,dont trust req.body
  
     const passwordHash = await bcrypt.hash(password,10);  //bcrypt for password hashing, password 10 times encrypting
     //console.log(passwordHash);
@@ -28,10 +39,22 @@ authRouter.post("/signup", async (req, res) => {
         firstName,
         lastName,
         emailId,
-        password: passwordHash
+        password: passwordHash,
+        age,
+        gender,
+        skills: Array.isArray(skills) ? skills : [skills], // ensure it's an array
+      about,
+      photoUrl
+
     });  //->if passes the validation then only creating a new instance of user in DB,storing the password as encrypted thread
-    await user.save();                //user will be saved to the database and the promise will be returned so we will use async await
-    res.send("User added successfully");
+    const token=await user.getJwt();          
+            res.cookie("token",token) 
+             await user.save(); 
+            res.json({
+              message: "User created successfully",
+              data: user,
+            }); 
+                   //user will be saved to the database and the promise will be returned so we will use async await
   } catch (err) {
     res.status(400).send("ERROR: " + err.message);
   }

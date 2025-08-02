@@ -7,7 +7,8 @@ const UserModel = require("../models/user.js"); //importing the user model
 const { connection } = require("mongoose");
 
 
-const USER_SAFE_DATA=["firstName", "lastName", "photoUrl", "age", "gender" ,"about" ];
+const USER_SAFE_DATA=["firstName", "lastName", "photoUrl", "age", "gender" ,"about"];
+
 
 userRouter.get("/user/requests/received", userAuth, async (req , res)=>{
     try{

@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
             }
         },
     },
-    photourl:{
+    photoUrl:{
         type:String,
         default:"https://media.istockphoto.com/id/1726213993/vector/default-avatar-profile-placeholder-abstract-vector-silhouette-element.jpg?s=612x612&w=0&k=20&c=nYlk0j076CBZ5xGCCaVXtISYGK2SzXRwuQBXPkfmMX4=",
          validate(value){
