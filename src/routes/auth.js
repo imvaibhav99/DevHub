@@ -9,17 +9,12 @@ const cookieParser=require('cookie-parser');
 const userAuth=require("../middlewares/auth")
 const User=require("../models/user");  //get the user model
 
-
-
-
-
-
 //creating api directly from app.js using postman
 authRouter.post("/signup", async (req, res) => {
   try {
      //now when made any req of json data->it will go through api validator
     validateSignUpData(req); //API level validation =>written inside try block so that its error can be catched from catch block
-
+   
         const {
       firstName,
       lastName,
@@ -30,10 +25,24 @@ authRouter.post("/signup", async (req, res) => {
       skills,
       about,
       photoUrl,
-    } = req.body;
+      username,
+       github,
+      linkedIn,
+      x,
+      leetcode,
+      gfg
+        } = req.body;
   //after validation,instantly extract the data,dont trust req.body
  
     const passwordHash = await bcrypt.hash(password,10);  //bcrypt for password hashing, password 10 times encrypting
+
+       const socialLinks = {
+  github,
+  linkedIn,
+  x,
+  leetcode,
+  gfg,
+};
     //console.log(passwordHash);
     const user = new User({
         firstName,
@@ -44,8 +53,10 @@ authRouter.post("/signup", async (req, res) => {
         gender,
         skills: Array.isArray(skills) ? skills : [skills], // ensure it's an array
       about,
-      photoUrl
-
+      photoUrl,
+      username,
+      socialLinks
+     
     });  //->if passes the validation then only creating a new instance of user in DB,storing the password as encrypted thread
     const token=await user.getJwt();          
             res.cookie("token",token) 

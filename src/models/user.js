@@ -15,6 +15,20 @@ const userSchema = new mongoose.Schema({
     lastName:{
         type: String
     },
+    username:{
+        type: String,
+        required:true,
+        unique:true, 
+        index:true, 
+        minLength:4, 
+        maxLength:50,
+        validate(value){  //by default it runs only on new user not on update users 
+            if(!validator.isAlphanumeric(value)){
+                throw new Error("Username can only contain letters and numbers");
+            }
+        }
+    },
+
     emailId:{
         type: String,
         required:true,
@@ -30,7 +44,7 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         required:true,
-        unique:true, 
+        //unique:true, 
          validate(value){
             if(!validator.isStrongPassword(value)){
                 throw new Error( " enter a strong password "+ value);
@@ -59,11 +73,53 @@ const userSchema = new mongoose.Schema({
         } 
     },about:{
         type:String,
+        maxLength:500,
         default:"This is default about of a User" //to store default behaviour in DB 
     },
     skills:{
-        type:[String] //array of strings to have more than one skill
+        type:[String] 
     },
+    socialLinks:{
+        github:{
+            type:String,
+            validate:{
+                validator(value){
+                    return !value || validator.isURL(value); 
+                },message:"Invalid GitHub URL"
+            }},
+            linkedIn:{
+                type:String,
+                validate:{
+                    validator(value){
+                        return !value ||  validator.isURL(value); 
+                    },message:"Invalid LinkedIn URL"
+                }
+            },
+            x:{
+                type:String,
+                validate:{
+                    validator(value){
+                        return !value ||  validator.isURL(value); 
+                    },message:"Invalid X URL"
+                }
+            },
+            leetcode:{
+                type:String,
+                validate:{
+                    validator(value){
+                        return !value ||  validator.isURL(value); 
+                    },message:"Invalid LeetCode URL"
+                }
+            },
+            gfg:{
+                type:String,    
+                validate:{
+                    validator(value){
+                        return !value ||  validator.isURL(value); 
+                    },message:"Invalid GeeksforGeeks URL"
+                }
+            }
+    }
     
 },{timestamps:true});
 
