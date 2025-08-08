@@ -416,3 +416,37 @@ put all essential imports in each api file.
     origin:"http://localhost:5174",  //frontend URL 
     credentials:true, //allow cookies to be sent with requests
 })); -->
+
+
+
+
+
+
+Deploying Backend:
+enter the sh key command to enter the machine-> cd DevHub -> npm install -> In mongodb atlas-> Network Access-> edit (add the ip of the public aws instance) -> then npm run start -> Now add the port 7777 of the backend to the security group with custom ip and 0.0.0.0/0
+
+->TO run the server forever in the background,we have to install package manager (pm2)-> npm install pm2 -g -> start the server using pm2 -> pm2 start npm -- start -> It will run forever (by npm run start it will run only till terminal is open)
+
+->pm2 logs to check your logs,pm2 flush: for flushing the logs ,pm2 list : gives list of the server , pm2 stop npm(name) : stops the server ,pm2 delete npm : deletes the server
+
+pm2 start npm --name "DevHub" -- start -> provides custon name to the backend server.
+
+Frontend : http://16.171.33.78/
+Backend : http://16.171.33.78:7777/
+
+It is not a corrrect way to ruun the application, the front end should run on devhun.in and backend on devhub.in/api. It is done throught DNS mapping of frontend and backend.
+For mapping we use nginx proxy:sudo nano /etc/nginx/sites-available/default
+In server name: Ip address of the frontend aws instance public ip:
+ server_name 16.171.33.78;
+
+  location /api/ {
+        proxy_pass http://localhost:7777/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+    save config-> restart nginx (sudo systemctl restart nginx )
+
+    Now just change the frontend base URL
