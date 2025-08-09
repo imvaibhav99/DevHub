@@ -7,7 +7,7 @@
         if(!token){
            return res.status(401).send("Please Login")  //if token is not present in the cookies
         }
-        const decodeObj=  await jwt.verify(token ,"DEVHUB@99") //verify the token with the secret key
+        const decodeObj=  await jwt.verify(token ,process.env.JWT_SECRET_KEY) //verify the token with the secret key
         const {_id}= decodeObj;                               //extract the userId from the decoded object
         const user= await User.findById(_id);                //find the user in the database with the userId
         if(!user){

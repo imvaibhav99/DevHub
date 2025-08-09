@@ -7,7 +7,9 @@ const bcrypt=require('bcrypt');
 const cookieParser=require("cookie-parser");
 const jwt=require("jsonwebtoken"); 
 const { userAuth } = require("./middlewares/auth"); 
- const cors= require("cors"); //importing cors to allow cross-origin requests
+const cors= require("cors"); //importing cors to allow cross-origin requests
+
+require("dotenv").config(); //importing dotenv to use environment variables
 
 app.use(cors({
     origin:"http://localhost:5173",  //frontend URL
@@ -33,8 +35,8 @@ app.use("/",userRouter); //using the user router
 connectDB()
     .then(()=>{  //server runs only after the the Database is connected
         console.log("Datatbase Connection Established");
-        app.listen(7777,()=>{
-            console.log("Server is listening at port 7777");
+        app.listen(process.env.PORT,()=>{
+            console.log("Server is listening at port : " + process.env.PORT);
             
         });
     })

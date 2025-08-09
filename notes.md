@@ -450,3 +450,23 @@ In server name: Ip address of the frontend aws instance public ip:
     save config-> restart nginx (sudo systemctl restart nginx )
 
     Now just change the frontend base URL
+
+
+
+
+
+
+Now to use amazon email service:ses:
+ users->create a new user->policy->amazonses full access->create user->ses dashboard
+ create identity with email and verify. then in eam->go to user ->create access key->other->create
+
+
+
+
+
+
+
+
+
+ ->Install "npm i dotenv"->to make your code secrets globalised and to call it directly through process.
+ ->add the dotenv middleware in app.js
