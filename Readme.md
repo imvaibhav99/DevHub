@@ -1,4 +1,4 @@
-DevHub: http://16.171.33.78/
+DevHub: http://devhub-web.duckdns.org/
 Features
 User authentication and session management
 
@@ -11,8 +11,6 @@ Sending interest or ignore requests to other users
 Social link validation and storage
 
 Error handling and validation for API requests
-
-Payment Integration
 
 Real time messaging 
 
