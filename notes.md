@@ -434,7 +434,7 @@ pm2 start npm --name "DevHub" -- start -> provides custon name to the backend se
 Frontend : http://16.171.33.78/
 Backend : http://16.171.33.78:7777/
 
-It is not a corrrect way to ruun the application, the front end should run on devhun.in and backend on devhub.in/api. It is done throught DNS mapping of frontend and backend.
+It is not a corrrect way to run the application, the front end should run on devhub.in and backend on devhub.in/api. It is done throught DNS mapping of frontend and backend.
 For mapping we use nginx proxy:sudo nano /etc/nginx/sites-available/default
 In server name: Ip address of the frontend aws instance public ip:
  server_name 16.171.33.78;
@@ -470,3 +470,50 @@ Now to use amazon email service:ses:
 
  ->Install "npm i dotenv"->to make your code secrets globalised and to call it directly through process.
  ->add the dotenv middleware in app.js
+ ->After adding dotenv,we have to add dotenv in the server deployed manually through terminal.
+ Firstly re build the frontend then come to backend in production.Follow the steps as mentioned previously, then ->  sudo nano .env :add the .env file content and save,then restart the server
+
+
+
+
+
+
+
+
+
+
+ # websocket (real time chatting using socket.io)
+ After creating the frontend window:
+ Creating server side api:
+ in app.js:
+<!-- const server=http.createServer(app); //creating a server using http and express
+initialiseSocket(server); -->
+
+In socket.js:
+
+<!-- const socket=require("socket.io"); 
+
+const initialiseSocket=  (server) => {
+
+    const io=socket(server,{
+        cors:{
+            origin:"http://localhost:5173",
+        },
+    });
+
+    io.on("connection",(socket)=>{      //when a user connects to the socket
+
+        //These are the events that socket will listen to
+        socket.on("joinChat",(data)=>{             
+
+        })
+        socket.on("sendMessage",(data)=>{
+            
+        })
+        socket.on("disconnect",(data)=>{
+            
+        })
+    })
+} -->
+
+->Now move to the frontend side:
