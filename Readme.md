@@ -1,4 +1,4 @@
-DevHub: http://devhub-web.duckdns.org/
+DevHub: http://devhub.ydns.eu/
 Features
 User authentication and session management
 
